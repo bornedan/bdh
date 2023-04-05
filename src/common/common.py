@@ -1,7 +1,17 @@
+import datetime
+
 import yaml
 import os
-config = None
+import logging
+from logging import config
+import argparse
 
+parser = argparse.ArgumentParser()
+parser.add_argument('--os', )
+args = parser.parse_args()
+
+config = None
+logging.basicConfig(format='%(asctime)s - %(levelname)s - %(name)s - %(filename)s.%(funcName)s()(%(lineno)d):%(message)s')
 def list_replace_value(l: list, old: str, new: str) -> list:
     x = []
     for e in l:
@@ -29,16 +39,31 @@ def dict_replace_value(d: dict, old: str, new: str) -> dict:
 def get_config():
     global config
     if config == None:
-        with open("./../../config.yaml") as f:
-            config = yaml.load(f, Loader=yaml.FullLoader)
-        path = os.path.dirname(os.path.dirname(os.getcwd())) + "\\"
-        config = dict_replace_value(config, "@path@", path)
+        logging.debug("Start read config.yaml")
+        try:
+            with open("/config.yaml") as f:
+                config = yaml.safe_load(f)
+        except:
+            logging.error("Load config.yaml failed")
+        logging.debug("Config.yaml was loaded.")
+        #path=os_path
+        #config = dict_replace_value(config, "@path@", path)
+    else:
+        logging.debug("Config file was loaded earlier.")
+    config['log']['handlers']['file']['filename'] = config['log-setting']['orig-path']+datetime.datetime.today().strftime('%Y_%m_%d')+"_wf_load_data" + ".log"
+    return config
+
+
+logging.config.dictConfig(get_config()['log'])
 
 def get_api_headers():
+    logging.debug("Start method")
     get_config()
     api_key_file = open(config['token-url'],"r")
+    logging.debug("Get api key url: " + str(api_key_file))
     api_key = api_key_file.read()
     api_key_file.close()
+    logging.debug("Get api key")
     headers = {
         'Content-Type': 'application/json; charset=utf-8',
         'x-access-token': api_key
@@ -47,4 +72,4 @@ def get_api_headers():
 
 
 if __name__ == '__main__':
-    print(get_api_headers())
+    get_config()
