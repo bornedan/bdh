@@ -1,16 +1,12 @@
-import requests, zipfile, os
+import requests, os
 from zipfile import ZipFile
 import logging
 import logging.config
 import datetime
-import sys
 import shutil
-sys.path.remove("/src/common")
 
 from src.common import common as cmn
 
-
-today = datetime.datetime.today().strftime('%Y_%m_%d')
 logging.config.dictConfig(cmn.get_config()['log'])
 
 def download_gtfs_zip(url, save_path, chunk_size=128):
@@ -52,13 +48,14 @@ def delete_gtfs_files(gtfs_dir_path):
             logging.warning("File: "+gtfs_dir_path+ "/"+ file + " can not be removed.")
     logging.debug("Removing files ended.")
 
-def move_files(source_dir, dest_dir):
+def move_files(source_dir, dest_dir,day):
     logging.debug("Start moving gtfs files from "+ source_dir+ " to "+ dest_dir)
     files_to_move = os.listdir(source_dir)
     try:
         for file in files_to_move:
-            os.rename(source_dir+"/"+file,source_dir+"/"+today+"_"+file)
-            shutil.move(source_dir+"/"+today+"_"+file,dest_dir+"/"+today+"_"+file)
+            renamed_file = file.replace(".txt",".csv")
+            os.rename(source_dir+"/"+file,source_dir+"/"+day+"_"+renamed_file)
+            shutil.move(source_dir+"/"+day+"_"+renamed_file,dest_dir+"/"+day+"_"+renamed_file)
         logging.debug("Files was correctly moved")
     except:
         logging.error("Moving files from" +source_dir+" to " +dest_dir+" failed.")
@@ -76,13 +73,14 @@ def clean_up(path):
 
 
 def run():
-    url = cmn.get_config()['gtfs']['url']
+    today = datetime.datetime.today().strftime('%Y_%m_%d')
+    url = cmn.get_config()['pid']['gtfs']['url']
     path = cmn.get_config()['data']['stage']['path']+today + "_gtfs"
     dest_path = cmn.get_config()['data']['gtfs']['path']
     download_gtfs_zip(url, path +".zip")
     unzip_gtfs(path+".zip",path)
     delete_gtfs_files(path)
-    move_files(path,dest_path)
+    move_files(path,dest_path,today)
     clean_up(path)
 
 

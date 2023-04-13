@@ -5,16 +5,24 @@ data:
     path: "/data/data/stage/"
   gtfs:
     path: "/data/data/stops/"
-    no-delete-list: ["stops.txt","agency.txt","calendar.txt"]
-gtfs:
-  url: "http://data.pid.cz/PID_GTFS.zip"
+    no-delete-list: ["stops.txt"]
+  rtvp:
+    json-separator: "__"
+    filters:
+      properties__trip__gtfs__route_id: "L3"
+      #properties__trip__vehicle_type__description_cs: "autobus"
+pid:
+  gtfs:
+    url: "http://data.pid.cz/PID_GTFS.zip"
+  rtvp:
+    url: 'https://api.golemio.cz/v2/vehiclepositions'
 log-setting:
     orig-path: "/data/logs/"
 log:
   version: 1
   formatters:
     standard:
-      format: '%(asctime)s - %(levelname)s - %(name)s - %(filename)s.%(funcName)s()(%(lineno)d):%(message)s'
+      format: '%(asctime)s - %(levelname)s - %(name)s - %(filename)s.%(funcName)s()(%(lineno)d): %(message)s'
   handlers:
     console:
       class: logging.StreamHandler
@@ -27,6 +35,6 @@ log:
       formatter: standard
       filename: "/data/logs/"
   root:
-    level: NOTSET
+    level: DEBUG
     handlers: [console,file]
     propogate: yes
