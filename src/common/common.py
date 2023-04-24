@@ -1,15 +1,8 @@
 import datetime
-
 import yaml
-import os
 import logging
 from logging import config
-import argparse
-
-parser = argparse.ArgumentParser()
-parser.add_argument('--os', )
-args = parser.parse_args()
-
+import sys
 config = None
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(name)s - %(filename)s.%(funcName)s()(%(lineno)d):%(message)s')
 def list_replace_value(l: list, old: str, new: str) -> list:
@@ -36,9 +29,16 @@ def dict_replace_value(d: dict, old: str, new: str) -> dict:
     return x
 
 
+def log_unexpected_except(exc_type, exc_value, exc_traceback):
+    if issubclass(exc_type, KeyboardInterrupt):
+        sys.__excepthook__(exc_type, exc_value, exc_traceback)
+        return
+    logging.error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
+
 def get_config():
     global config
     if config == None:
+        sys.excepthook = log_unexpected_except
         logging.debug("Start read config.yaml")
         try:
             with open("/config.yaml") as f:
@@ -69,6 +69,9 @@ def get_api_headers():
         'x-access-token': api_key
     }
     return headers
+
+
+
 
 
 if __name__ == '__main__':

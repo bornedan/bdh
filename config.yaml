@@ -7,6 +7,7 @@ data:
     path: "/data/data/stops/"
     no-delete-list: ["stops.txt"]
   rtvp:
+    path: "data/data/delay/"
     json-separator: "__"
     filters:
       properties__trip__gtfs__route_id: "L3"

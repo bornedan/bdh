@@ -8,6 +8,7 @@ import pandas as pd
 import requests
 import regex
 import yaml
+import pyarrow
 from src.common import common as cmn
 
 
@@ -27,7 +28,11 @@ def get_rtvp(url, headers):
 
 def normalize_json(json_file, separator):
     logging.debug("Normalize json with separator " + separator)
-    normalized_json = pd.json_normalize(json_file.json()['features'], sep=separator)
+    try:
+        normalized_json = pd.json_normalize(json_file.json()['features'], sep=separator)
+    except:
+        logging.error("Failed json normalizing")
+        logging.error(json_file.json)
     return normalized_json
 
 
@@ -43,8 +48,8 @@ def apply_filters(veh_pos, filters: dict):
 
 
 def save_file(path, file, time):
-    logging.debug("Saving file to "+path+time+"_rtvp.pickle")
-    file.to_pickle(path+time+"_rtvp.pickle")
+    logging.debug("Saving file to "+path+time+"_rtvp.parquet")
+    file.to_parquet(path+time+"_rtvp.parquet")
 
 def run():
     url = cmn.get_config()['pid']['rtvp']['url']

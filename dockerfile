@@ -9,4 +9,5 @@ ENV PYTHONPATH "${PYTHONPATH}:/src/common"
 #CMD ["python", "./src/common/common.py"]
 #CMD ["python", "./src/wfloaddata/loadstops.py"]
 #CMD ["python", "./src/wfloaddata/loaddelay.py"]
+#CMD ["python", "./src/wfloaddata/delaymaintenance.py"]
 CMD ["python", "./src/wfloaddata/runworkflow.py"]
