@@ -19,8 +19,8 @@ def get_rtvp(url, headers):
     logging.debug("Start loading rtvp json.")
     response = requests.get(url, headers=headers)
     if (response.status_code != 200):
-        logging.error("API request ended with status code: " + response.status_code)
-        raise Exception("API request ended with status code: " + response.status_code)
+        logging.error("API request ended with status code: " + str(response.status_code))
+        raise Exception("API request ended with status code: " + str(response.status_code))
     else:
         logging.debug("API request ended with status code: 200")
     return response
