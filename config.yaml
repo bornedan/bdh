@@ -39,7 +39,7 @@ log:
       class: logging.handlers.TimedRotatingFileHandler
       level: DEBUG
       formatter: standard
-      filename: "/data/logs/test_log.log"
+      filename: "/data/logs/wf_load_data.log"
       when: 'midnight'
   root:
     level: DEBUG
