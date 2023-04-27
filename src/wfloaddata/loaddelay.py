@@ -32,7 +32,7 @@ def normalize_json(json_file, separator):
         normalized_json = pd.json_normalize(json_file.json()['features'], sep=separator)
     except:
         logging.error("Failed json normalizing")
-        logging.error(json_file.json)
+        logging.error(json_file.json())
     return normalized_json
 
 

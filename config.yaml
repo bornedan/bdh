@@ -30,12 +30,18 @@ log:
       level: DEBUG
       formatter: standard
       stream: ext://sys.stdout
-    file:
-      class: logging.FileHandler
+    #file:
+      #class: logging.FileHandler
+      #level: DEBUG
+      #formatter: standard
+      #filename: "/data/logs/"
+    rotate:
+      class: logging.handlers.TimedRotatingFileHandler
       level: DEBUG
       formatter: standard
-      filename: "/data/logs/"
+      filename: "/data/logs/test_log.log"
+      when: 'midnight'
   root:
     level: DEBUG
-    handlers: [console,file]
+    handlers: [console,rotate]
     propogate: yes

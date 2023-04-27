@@ -5,6 +5,7 @@ ADD src ./src
 ADD golemio-api.cert .
 ADD config.yaml .
 ENV PYTHONPATH "${PYTHONPATH}:/src/common"
+ENV TZ="Europe/Prague"
 
 #CMD ["python", "./src/common/common.py"]
 #CMD ["python", "./src/wfloaddata/loadstops.py"]

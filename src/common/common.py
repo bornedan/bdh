@@ -3,6 +3,7 @@ import yaml
 import logging
 from logging import config
 import sys
+import os
 config = None
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(name)s - %(filename)s.%(funcName)s()(%(lineno)d):%(message)s')
 def list_replace_value(l: list, old: str, new: str) -> list:
@@ -50,7 +51,7 @@ def get_config():
         #config = dict_replace_value(config, "@path@", path)
     else:
         logging.debug("Config file was loaded earlier.")
-    config['log']['handlers']['file']['filename'] = config['log-setting']['orig-path']+datetime.datetime.today().strftime('%Y_%m_%d')+"_wf_load_data" + ".log"
+    #config['log']['handlers']['file']['filename'] = config['log-setting']['orig-path']+datetime.datetime.today().strftime('%Y_%m_%d')+"_wf_load_data" + ".log"
     return config
 
 
