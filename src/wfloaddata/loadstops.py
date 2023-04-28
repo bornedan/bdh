@@ -10,6 +10,14 @@ from src.common import common as cmn
 logging.config.dictConfig(cmn.get_config()['log'])
 
 def download_gtfs_zip(url, save_path, chunk_size=128):
+    """
+    Download zip file from http://data.pid.cz/PID_GTFS.zip with all information about Prague public transport like
+    bus stop list, etc...
+    :param url:
+    :param save_path:
+    :param chunk_size:
+    :return:
+    """
     logging.debug("Start downloading bus stops names.")
     try:
         r = requests.get(url, stream=True)
