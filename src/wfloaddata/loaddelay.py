@@ -33,7 +33,7 @@ def normalize_json(json_file, separator):
         normalized_json = pd.json_normalize(json_file.json()['features'], sep=separator)
     except:
         logging.error("Failed json normalizing")
-        logging.error(json_file.json())
+        #logging.error(json_file.json())
         try:
             logging.error("Try save json object.")
             with open('/data/logs/json.pickle', 'wb') as outp:
