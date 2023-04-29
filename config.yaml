@@ -27,7 +27,7 @@ log:
   handlers:
     console:
       class: logging.StreamHandler
-      level: DEBUG
+      level: INFO
       formatter: standard
       stream: ext://sys.stdout
     #file:
@@ -37,7 +37,7 @@ log:
       #filename: "/data/logs/"
     rotate:
       class: logging.handlers.TimedRotatingFileHandler
-      level: DEBUG
+      level: INFO
       formatter: standard
       filename: "/data/logs/wf_load_data.log"
       when: 'midnight'

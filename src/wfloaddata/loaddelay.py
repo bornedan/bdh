@@ -1,30 +1,38 @@
 import pickle
-
-import requests, os
-from zipfile import ZipFile
 import logging
 import logging.config
 import datetime
-import shutil
 import pandas as pd
 import requests
-import regex
-import yaml
-import pyarrow
+import json
+
 from src.common import common as cmn
 
 logging.config.dictConfig(cmn.get_config()['log'])
 
 
-def get_rtvp(url, headers):
+def validate_JSON(jsonData):
+    try:
+        json.loads(jsonData)
+    except ValueError as err:
+        return False
+    return True
+
+
+def get_rtvp(url: str, headers: dict) -> object:
     logging.debug("Start loading rtvp json.")
-    response = requests.get(url, headers=headers)
-    if (response.status_code != 200):
-        logging.error("API request ended with status code: " + str(response.status_code))
-        raise Exception("API request ended with status code: " + str(response.status_code))
-    else:
-        logging.debug("API request ended with status code: 200")
-    return response
+    for index in range(5):
+        response = requests.get(url, headers=headers)
+        if response.status_code != 200:
+            logging.warning("Attempt: {} API request ended with status code: {}".format(index,str(response.status_code)))
+        elif not validate_JSON(response.text):
+            logging.warning(
+                "Attempt: {} JSON file is broken.".format(index))
+        else:
+            logging.debug("API request correctly was load.")
+            return response
+    logging.ERROR("Load API response failed.")
+    raise Exception("Can not load API response.")
 
 
 def normalize_json(json_file, separator):
@@ -33,7 +41,6 @@ def normalize_json(json_file, separator):
         normalized_json = pd.json_normalize(json_file.json()['features'], sep=separator)
     except:
         logging.error("Failed json normalizing")
-        #logging.error(json_file.json())
         try:
             logging.error("Try save json object.")
             with open('/data/logs/json.pickle', 'wb') as outp:
@@ -93,9 +100,9 @@ def run():
     url = cmn.get_config()['pid']['rtvp']['url']
     separator = cmn.get_config()['data']['rtvp']['json-separator']
     saving_path = cmn.get_config()['data']['stage']['path']
-    today = datetime.datetime.today().strftime('%Y_%m_%d')
     now = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
     headers = cmn.get_api_headers()
+
     veh_pos_raw = get_rtvp(url, headers)
     veh_pos = normalize_json(veh_pos_raw, separator)
     veh_pos = apply_filters(veh_pos, cmn.get_config()['data']['rtvp']['filters'])
