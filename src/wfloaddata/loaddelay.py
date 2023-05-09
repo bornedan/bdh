@@ -20,19 +20,32 @@ def validate_JSON(jsonData):
 
 
 def get_rtvp(url: str, headers: dict) -> object:
-    logging.debug("Start loading rtvp json.")
-    for index in range(5):
-        response = requests.get(url, headers=headers)
-        if response.status_code != 200:
-            logging.warning("Attempt: {} API request ended with status code: {}".format(index,str(response.status_code)))
-        elif not validate_JSON(response.text):
-            logging.warning(
-                "Attempt: {} JSON file is broken.".format(index))
-        else:
-            logging.debug("API request correctly was load.")
-            return response
-    logging.ERROR("Load API response failed.")
-    raise Exception("Can not load API response.")
+    wait_times = [10, 10, 10, 60, 60, 60, 600, 600, 3600]
+    wait_index = 0
+    while True:
+        try:
+            logging.debug("Start loading rtvp json.")
+            instant_repeat_index = 5
+            for index in range(instant_repeat_index):
+                response = requests.get(url, headers=headers)
+                if response.status_code != 200:
+                    logging.warning(
+                        "Attempt: {} API request ended with status code: {}".format(index, str(response.status_code)))
+                elif not validate_JSON(response.text):
+                    logging.warning(
+                        "Attempt: {} JSON file is broken.".format(index))
+                else:
+                    logging.debug("API request correctly was load.")
+                    return response
+            logging.ERROR(f"Load API response failed after {instant_repeat_index} times attempts.")
+            raise Exception("Can not load API response.")
+        except Exception as e:
+            logging.ERROR(f"Connections to server failed with error: {e}")
+            continue
+        wait_index = (wait_index + 1) % len(wait_times)
+        wait_time = wait_times[wait_index]
+        logging.WARNING(f"Try connect to api after {wait_time}s")
+        time.sleep(wait_time)
 
 
 def normalize_json(json_file, separator):
@@ -47,7 +60,7 @@ def normalize_json(json_file, separator):
                 pickle.dump(json_file, outp, pickle.HIGHEST_PROTOCOL)
         except:
             logging.error("Saving pickle object failed.")
-        try:
+        '''try:
             logging.error("Print json object as string.")
             logging.error(str(json_file))
         except:
@@ -76,7 +89,7 @@ def normalize_json(json_file, separator):
                 logging.error("Can not text")
             logging.error("End of section separate info about json object.")
         except:
-            logging.error("Unexpected error. Can not analyze this object.")
+            logging.error("Unexpected error. Can not analyze this object.")'''
     return normalized_json
 
 
