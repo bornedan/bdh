@@ -13,8 +13,8 @@ def download_gtfs_zip(url, save_path, chunk_size=128):
     """
     Download zip file from http://data.pid.cz/PID_GTFS.zip with all information about Prague public transport like
     bus stop list, etc...
-    :param url:
-    :param save_path:
+    :param url: Web url with zip file.
+    :param save_path: Path to destination folder.
     :param chunk_size:
     :return:
     """
@@ -29,6 +29,12 @@ def download_gtfs_zip(url, save_path, chunk_size=128):
     logging.debug("Downloaded was ended.")
 
 def unzip_gtfs(source_path,destanation_path):
+    """
+    Unzip given .zip file.
+    :param source_path: .zip file destination.
+    :param destanation_path: Unzip files location.
+    :return:
+    """
     logging.debug("Start unzipping file.")
     try:
         with ZipFile(source_path, 'r') as zObject:
@@ -40,6 +46,11 @@ def unzip_gtfs(source_path,destanation_path):
     logging.debug("Unzipping was ended.")
 
 def delete_gtfs_files(gtfs_dir_path):
+    """
+    Load list of given filenames from config.yaml and remove other files in gtfs_dir_path.
+    :param gtfs_dir_path: Path to folder with files.
+    :return:
+    """
     logging.debug("Listing gtfs file names.")
     gtfs_files = os.listdir(gtfs_dir_path)
     file_to_stay = cmn.get_config()['data']['gtfs']['no-delete-list']
@@ -57,6 +68,13 @@ def delete_gtfs_files(gtfs_dir_path):
     logging.debug("Removing files ended.")
 
 def move_files(source_dir, dest_dir,day):
+    """
+    Take files from source_dir and move to dest_dir. Add prefix current date and change suffix to .csv.
+    :param source_dir:
+    :param dest_dir:
+    :param day:
+    :return:
+    """
     logging.debug("Start moving gtfs files from "+ source_dir+ " to "+ dest_dir)
     files_to_move = os.listdir(source_dir)
     try:
@@ -69,6 +87,11 @@ def move_files(source_dir, dest_dir,day):
         logging.error("Moving files from" +source_dir+" to " +dest_dir+" failed.")
 
 def clean_up(path):
+    """
+    Remove downloaded zip file.
+    :param path: Path to zip file.
+    :return:
+    """
     logging.debug("Starting cleanup  "+ path)
     try:
         shutil.rmtree(path)

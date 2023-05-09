@@ -6,6 +6,7 @@ data:
   gtfs:
     path: "/data/data/stops/"
     no-delete-list: ["stops.txt"]
+    #no-delete-list: ['agency.txt','calendar.txt','calendar_dates.txt','fare_attributes.txt','fare_rules.txt','feed_info.txt','levels.txt','pathways.txt','routes.txt','route_stops.txt','route_sub_agencies.txt','stops.txt','transfers.txt','trips.txt']
   rtvp:
     path: "data/data/delay/"
     json-separator: "__"

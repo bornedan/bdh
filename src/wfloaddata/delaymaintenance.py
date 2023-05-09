@@ -13,12 +13,22 @@ logging.config.dictConfig(cmn.get_config()['log'])
 
 
 def get_all_files(source_path):
+    """
+    Return all file names in directory.
+    :param source_path: Path to directory.
+    :return: List with all file names in given directory.
+    """
     logging.debug("Finding all files in source folder.")
     gtfs_files = os.listdir(source_path)
     return gtfs_files
 
 
 def filter_rtvp_files(files_list):
+    """
+    Remove words from filename list based on config file.
+    :param files_list:
+    :return:
+    """
     logging.debug("Filtering only rtvp files.")
     pat = re.compile(
         r'^\d\d\d\d_(0[1-9]|10|11|12)_(0[1-2]|[1-2][0-9]|3[0-1])_([0-1][0-9]|2[0-3])_([0-5][0-9])_([0-5][0-9])_rtvp.parquet$')
