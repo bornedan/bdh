@@ -40,7 +40,11 @@ def get_rtvp(url: str, headers: dict) -> object:
             logging.ERROR(f"Load API response failed after {instant_repeat_index} times attempts.")
             raise Exception("Can not load API response.")
         except Exception as e:
-            logging.ERROR(f"Connections to server failed with error: {str(e)}")
+            try:
+                logging.ERROR(f"Connections to server failed with error: {str(e)}")
+            except Exception as e2:
+                logging.ERROR(f"Can not log exception, process ended with error: {str(e2)}")
+                continue
             continue
         wait_index = (wait_index + 1) % len(wait_times)
         wait_time = wait_times[wait_index]
