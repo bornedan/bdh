@@ -5,6 +5,7 @@ import datetime
 import pandas as pd
 import requests
 import json
+import time
 
 from src.common import common as cmn
 
@@ -37,18 +38,13 @@ def get_rtvp(url: str, headers: dict) -> object:
                 else:
                     logging.debug("API request correctly was load.")
                     return response
-            logging.ERROR(f"Load API response failed after {instant_repeat_index} times attempts.")
+            logging.error(f"Load API response failed after {instant_repeat_index} times attempts.")
             raise Exception("Can not load API response.")
         except Exception as e:
-            try:
-                logging.ERROR(f"Connections to server failed with error: {str(e)}")
-            except Exception as e2:
-                logging.ERROR(f"Can not log exception, process ended with error: {str(e2)}")
-                continue
-            continue
+            logging.error(f"Connections to server failed with error: {str(e)}")
         wait_index = (wait_index + 1) % len(wait_times)
         wait_time = wait_times[wait_index]
-        logging.WARNING(f"Try connect to api after {wait_time}s")
+        logging.warning(f"Try connect to api after {wait_time}s")
         time.sleep(wait_time)
 
 
