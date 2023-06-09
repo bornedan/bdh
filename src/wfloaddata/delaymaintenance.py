@@ -31,7 +31,7 @@ def filter_rtvp_files(files_list):
     """
     logging.debug("Filtering only rtvp files.")
     pat = re.compile(
-        r'^\d\d\d\d_(0[1-9]|10|11|12)_(0[1-2]|[1-2][0-9]|3[0-1])_([0-1][0-9]|2[0-3])_([0-5][0-9])_([0-5][0-9])_rtvp.parquet$')
+        r'^\d\d\d\d_(0[1-9]|10|11|12)_(0[1-9]|[1-2][0-9]|3[0-1])_([0-1][0-9]|2[0-3])_([0-5][0-9])_([0-5][0-9])_rtvp.parquet$')
     filtered_file = [name for name in files_list if pat.match(name)]
     return filtered_file
 
